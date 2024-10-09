@@ -49,8 +49,8 @@ jobs:
 
       - name: Update hardhat config
         run: |
-          sed -i 's/version: "latest"/version: process.env.ZKSOLC_VERSION || "latest"/' hardhat.config.js
-          sed -i 's/version: "0.8.17"/version: process.env.SOLIDITY_VERSION || "0.8.17"/' hardhat.config.js
+          sed -i 's/version: "latest"/version: process.env.ZKSOLC_VERSION || "latest"/' hardhat.config.ts
+          sed -i 's/version: "0.8.17"/version: process.env.SOLIDITY_VERSION || "0.8.17"/' hardhat.config.ts
           cat hardhat.config.js
 
       - name: Install dependencies for ${{ matrix.name }}
