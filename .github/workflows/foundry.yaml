@@ -1,0 +1,43 @@
+name: Foundry
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_call:
+    inputs:
+      # Custom solidity hardhat parameters
+      foundry-version:
+        type: string
+        description: 'Hardhat version'
+        required: false
+      # Solidity compiler parameters
+      zksolc-version:
+        type: string
+        description: 'Zksolc version'
+        required: false
+        default: "latest"
+      solidity-version:
+        type: string
+        description: 'Solidity version'
+        required: false
+        default: "0.8.27"
+
+jobs:
+
+  foundry:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -ex {0}
+    steps:
+
+      - name: Install foundryup
+        run: |
+          curl -L https://raw.githubusercontent.com/matter-labs/foundry-zksync/main/install-foundry-zksync | bash
+          foundryup-zksync --branch main
+          which forge
+          forge --version
+          which cask
+          cask --version
