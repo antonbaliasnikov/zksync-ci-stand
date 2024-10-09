@@ -56,6 +56,10 @@ on:
         required: false
         default: "0.3.3"
 
+defaults:
+  run:
+    shell: bash -ex {0}
+
 jobs:
 
   # hardhat-solidity and hardhat-vyper jobs are supposed to check hardhat templates
