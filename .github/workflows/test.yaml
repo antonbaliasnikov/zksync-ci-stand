@@ -57,4 +57,7 @@ jobs:
         run: yarn install
 
       - name: Run ${{ matrix.name }} tests
+        env:
+          ZKSOLC_VERSION: 0.0.1
+          SOLIDITY_VERSION: 0.8.27
         run: yarn test
