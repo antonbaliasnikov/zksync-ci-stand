@@ -36,7 +36,7 @@ jobs:
       - name: Install foundryup
         run: |
           curl -L https://raw.githubusercontent.com/matter-labs/foundry-zksync/main/install-foundry-zksync | bash
-          foundryup-zksync --branch main
+          ./foundryup-zksync --branch main
           which forge
           forge --version
           which cask
