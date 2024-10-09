@@ -74,7 +74,7 @@ jobs:
     defaults:
       run:
         working-directory: 'templates/hardhat/solidity'
-        shell: 'bash -ex {0}'
+        shell: bash -ex {0}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,9 +83,9 @@ jobs:
 
       - name: Patch hardhat
         run: |
-          [ ! -z '${{ inputs.hardhat-zksync-version }}' ] && yarn add @matterlabs/hardhat-zksync@${{ inputs.hardhat-zksync-version }}
-          [ ! -z '${{ inputs.zksync-contracts-version }}' ] && yarn add @matterlabs/zksync-contracts@${{ inputs.zksync-contracts-version }}
-          [ ! -z '${{ inputs.zksync-ethers-version }}' ] && yarn add zksync-ethers@${{ inputs.zksync-ethers-version }}
+          [ ! -z '${{ inputs.hardhat-zksync-version }}' ] && yarn add @matterlabs/hardhat-zksync@${{ inputs.hardhat-zksync-version }} || true
+          [ ! -z '${{ inputs.zksync-contracts-version }}' ] && yarn add @matterlabs/zksync-contracts@${{ inputs.zksync-contracts-version }} || true
+          [ ! -z '${{ inputs.zksync-ethers-version }}' ] && yarn add zksync-ethers@${{ inputs.zksync-ethers-version }} || true
 
       # TODO: this step should be removed
       # when the process.env.* patch is applied to the templates repo
@@ -115,11 +115,9 @@ jobs:
 
       - name: Patch hardhat
         run: |
-          echo 123
-          [ ! -z '${{ inputs.hardhat-zksync-deploy-version }}' ] && yarn add @matterlabs/hardhat-zksync-deploy@${{ inputs.hardhat-zksync-deploy-version }}
-          [ ! -z '${{ inputs.hardhat-zksync-node-version }}' ] && yarn add @matterlabs/hardhat-zksync-node@${{ inputs.hardhat-zksync-node-version }}
-          [ ! -z '${{ inputs.hardhat-zksync-vyper-version }}' ] && yarn add @matterlabs/hardhat-zksync-vyper@${{ inputs.hardhat-zksync-vyper-version }}
-          echo 123
+          [ ! -z '${{ inputs.hardhat-zksync-deploy-version }}' ] && yarn add @matterlabs/hardhat-zksync-deploy@${{ inputs.hardhat-zksync-deploy-version }} || true
+          [ ! -z '${{ inputs.hardhat-zksync-node-version }}' ] && yarn add @matterlabs/hardhat-zksync-node@${{ inputs.hardhat-zksync-node-version }} || true
+          [ ! -z '${{ inputs.hardhat-zksync-vyper-version }}' ] && yarn add @matterlabs/hardhat-zksync-vyper@${{ inputs.hardhat-zksync-vyper-version }} || true
 
       # TODO: this step should be removed
       # when the process.env.* patch is applied to the templates repo
