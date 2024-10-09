@@ -115,6 +115,8 @@ jobs:
 
       - name: Patch hardhat
         run: |
+          set -x
+          echo 123
           [ ! -z '${{ inputs.hardhat-zksync-deploy-version }}' ] && yarn add @matterlabs/hardhat-zksync-deploy@${{ inputs.hardhat-zksync-deploy-version }}
           [ ! -z '${{ inputs.hardhat-zksync-node-version }}' ] && yarn add @matterlabs/hardhat-zksync-node@${{ inputs.hardhat-zksync-node-version }}
           [ ! -z '${{ inputs.hardhat-zksync-vyper-version }}' ] && yarn add @matterlabs/hardhat-zksync-vyper@${{ inputs.hardhat-zksync-vyper-version }}
