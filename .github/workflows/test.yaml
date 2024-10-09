@@ -27,11 +27,6 @@ jobs:
         with:
           repository: matter-labs/zksync-contract-templates
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "lts/*"
-
       - name: Install dependencies for ${{ matrix.name }}
         run: yarn install --frozen-lockfile
 
