@@ -5,11 +5,31 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
-  run-tests:
+
+  # This job is supposed to check hardhat template
+  # with the most recent version of Hardhat
+  # and with the most recent version of compilers
+
+
+  # Compiler versions in hardhat.config.js
+  # zksolc: {
+  #   version: "latest",
+  #   settings: {
+  #     // find all available options in the official documentation
+  #     // https://docs.zksync.io/build/tooling/hardhat/hardhat-zksync-solc#configuration
+  #   },
+  # },
+  # solidity: {
+  #   version: "0.8.17",
+  # },
+
+  # "@matterlabs/hardhat-zksync": "^1.1.0",
+  # "@matterlabs/zksync-contracts": "^0.6.1",
+  # "zksync-ethers": "^6.11.0"
+
+  hardhat:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -27,8 +47,14 @@ jobs:
         with:
           repository: matter-labs/zksync-contract-templates
 
+      - name: Update hardhat config
+        run: |
+          sed -i 's/version: "latest"/version: process.env.ZKSOLC_VERSION || "latest"/' hardhat.config.js
+          sed -i 's/version: "0.8.17"/version: process.env.SOLIDITY_VERSION || "0.8.17"/' hardhat.config.js
+          cat hardhat.config.js
+
       - name: Install dependencies for ${{ matrix.name }}
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Run ${{ matrix.name }} tests
         run: yarn test
