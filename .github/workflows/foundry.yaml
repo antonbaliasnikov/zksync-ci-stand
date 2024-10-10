@@ -7,10 +7,14 @@ on:
   pull_request:
   workflow_call:
     inputs:
-      # Custom solidity hardhat parameters
-      foundry-version:
+      # Dependency versions
+      zksync-era-version:
         type: string
-        description: 'Hardhat version'
+        description: 'Zksync era version'
+        required: false
+      era-test-node-version:
+        type: string
+        description: 'Era test node version'
         required: false
       # Solidity compiler parameters
       zksolc-version:
@@ -26,18 +30,6 @@ on:
 
 jobs:
 
-  ## zksync
-#  era_test_node = { git="https://github.com/matter-labs/era-test-node.git" , rev = "ceee937055a5a373e27b0ff9bf2e42391de78c59" }
-# zksync-web3-rs = {git = "https://github.com/jrigada/zksync-web3-rs.git", rev = "bc3e6d3e75b7ff3747ff2dccefa9fb74d770931b"}
-# # zksync-web3-rs = {git = "https://github.com/lambdaclass/zksync-web3-rs.git", rev = "56653345d14331e0865a6785c77cdda63c94eeba"}
-# zksync_basic_types = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_types = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_state = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_multivm = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_web3_decl = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_utils = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-# zksync_contracts = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
-
   foundry:
     runs-on: ubuntu-latest
     defaults:
@@ -45,11 +37,45 @@ jobs:
         shell: bash -ex {0}
     steps:
 
-      - name: Install foundryup
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: matter-labs/foundry-zksync
+
+      - name: Patch dependencies
+        env:
+          CARGO_TOML: Cargo.toml
+          GH_ML_URL: https://github.com
+          # `www.github.com` is a workaround for Cargo issue with `patch` section from `git` source
+          # https://github.com/rust-lang/cargo/issues/5478
+          GH_ML_PATCHED_URL: https://www.github.com
+          DEPENDENCIES_LIST: "zksync_dal zksync_basic_types zksync_types zksync_state zksync_multivm zksync_web3_decl zksync_utils zksync_contracts"
         run: |
-          curl -L https://raw.githubusercontent.com/matter-labs/foundry-zksync/main/install-foundry-zksync | bash
-          ${HOME}/.config/.foundry/bin/forge --version
-          ${HOME}/.config/.foundry/bin/cast --version
-          ./foundryup-zksync --branch main
-          ${HOME}/.config/.foundry/bin/forge --version
-          ${HOME}/.config/.foundry/bin/cast --version
+          if [! -z ${{ inputs.zksync-era-version }} ]; then
+            echo "[patch.\"${GH_ML_URL}/matter-labs/zksync-era.git\"]" >> "${CARGO_TOML}"
+            for DEP in ${{ env.DEPENDENCIES_LIST }}; do
+              echo "${DEP} = { git = '${GH_ML_PATCHED_URL}/matter-labs/zksync-era', rev = '${{ inputs.zksync-era-version }}' }" >> "${CARGO_TOML}"
+            done
+          fi
+          if [! -z ${{ inputs.era-test-node-version }} ]; then
+            echo "[patch.\"${GH_ML_URL}/matter-labs/era-test-node.git\"]" >> "${CARGO_TOML}"
+            echo "era_test_node = { git = '${GH_ML_PATCHED_URL}/matter-labs/era-test-node', rev = '${{ inputs.era-test-node-version }}' }" >> "${CARGO_TOML}"
+          fi
+          cat "${CARGO_TOML}"
+
+      - name: Build foundry
+        run: |
+          cargo build --release
+          ${PWD}/target/release/forge --version
+          echo "${PWD}/target/release" >> "${GITHUB_PATH}"
+
+      - name: Create test foundry project
+        run: forge init --template https://github.com/foundry-rs/forge-template foundry-test-project
+
+      - name: Build test foundry project
+        working-directory: foundry-test-project
+        run: forge build --zksync
+
+      - name: Run test foundry project
+        working-directory: foundry-test-project
+        run: forge test --zksync
