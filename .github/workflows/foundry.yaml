@@ -51,13 +51,13 @@ jobs:
           GH_ML_PATCHED_URL: https://www.github.com
           DEPENDENCIES_LIST: "zksync_dal zksync_basic_types zksync_types zksync_state zksync_multivm zksync_web3_decl zksync_utils zksync_contracts"
         run: |
-          if [! -z ${{ inputs.zksync-era-version }} ]; then
+          if [ ! -z ${{ inputs.zksync-era-version }} ]; then
             echo "[patch.\"${GH_ML_URL}/matter-labs/zksync-era.git\"]" >> "${CARGO_TOML}"
             for DEP in ${{ env.DEPENDENCIES_LIST }}; do
               echo "${DEP} = { git = '${GH_ML_PATCHED_URL}/matter-labs/zksync-era', rev = '${{ inputs.zksync-era-version }}' }" >> "${CARGO_TOML}"
             done
           fi
-          if [! -z ${{ inputs.era-test-node-version }} ]; then
+          if [ ! -z ${{ inputs.era-test-node-version }} ]; then
             echo "[patch.\"${GH_ML_URL}/matter-labs/era-test-node.git\"]" >> "${CARGO_TOML}"
             echo "era_test_node = { git = '${GH_ML_PATCHED_URL}/matter-labs/era-test-node', rev = '${{ inputs.era-test-node-version }}' }" >> "${CARGO_TOML}"
           fi
@@ -70,7 +70,7 @@ jobs:
           echo "${PWD}/target/release" >> "${GITHUB_PATH}"
 
       - name: Create test foundry project
-        run: forge init --template https://github.com/foundry-rs/forge-template foundry-test-project
+        run: forge init --no-git --no-commit --template https://github.com/foundry-rs/forge-template foundry-test-project
 
       - name: Build test foundry project
         working-directory: foundry-test-project
