@@ -75,6 +75,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           forge init --no-git --no-commit --template https://github.com/foundry-rs/forge-template foundry-test-project
 
+      - name: Patch compilers
+        working-directory: foundry-test-project
+        run: |
+          echo "[profile.default.zksync]" >> foundry.toml
+          echo "zksolc = \"${{ inputs.zksolc-version || '1.5.3' }}\"" >> foundry.toml
+          cat foundry.toml
+
       - name: Build test foundry project
         working-directory: foundry-test-project
         run: forge build --zksync
