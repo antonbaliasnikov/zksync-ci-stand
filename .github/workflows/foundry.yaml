@@ -26,6 +26,18 @@ on:
 
 jobs:
 
+  ## zksync
+#  era_test_node = { git="https://github.com/matter-labs/era-test-node.git" , rev = "ceee937055a5a373e27b0ff9bf2e42391de78c59" }
+# zksync-web3-rs = {git = "https://github.com/jrigada/zksync-web3-rs.git", rev = "bc3e6d3e75b7ff3747ff2dccefa9fb74d770931b"}
+# # zksync-web3-rs = {git = "https://github.com/lambdaclass/zksync-web3-rs.git", rev = "56653345d14331e0865a6785c77cdda63c94eeba"}
+# zksync_basic_types = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_types = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_state = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_multivm = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_web3_decl = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_utils = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+# zksync_contracts = { git = "https://github.com/matter-labs/zksync-era.git", rev = "7ad0425e00a44e0dd1c3abf38ab2f6335c2f86e7" }
+
   foundry:
     runs-on: ubuntu-latest
     defaults:
@@ -36,8 +48,8 @@ jobs:
       - name: Install foundryup
         run: |
           curl -L https://raw.githubusercontent.com/matter-labs/foundry-zksync/main/install-foundry-zksync | bash
+          ${HOME}/.config/.foundry/bin/forge --version
+          ${HOME}/.config/.foundry/bin/cask --version
           ./foundryup-zksync --branch main
-          which forge
-          forge --version
-          which cask
-          cask --version
+          ${HOME}/.config/.foundry/bin/forge --version
+          ${HOME}/.config/.foundry/bin/cask --version
