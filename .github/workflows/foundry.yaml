@@ -21,7 +21,7 @@ on:
         type: string
         description: 'Zksolc version'
         required: false
-        default: "latest"
+        default: "1.5.4"
       solidity-version:
         type: string
         description: 'Solidity version'
@@ -78,8 +78,9 @@ jobs:
       - name: Patch compilers
         working-directory: foundry-test-project
         run: |
+          echo "solc_version = \"${{ inputs.solidity-version || '0.8.27' }}\"" >> foundry.toml
           echo "[profile.default.zksync]" >> foundry.toml
-          echo "zksolc = \"${{ inputs.zksolc-version || '1.5.3' }}\"" >> foundry.toml
+          echo "zksolc = \"${{ inputs.zksolc-version || '1.5.4' }}\"" >> foundry.toml
           cat foundry.toml
 
       - name: Build test foundry project
