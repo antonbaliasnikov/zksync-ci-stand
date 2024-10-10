@@ -70,7 +70,10 @@ jobs:
           echo "${PWD}/target/release" >> "${GITHUB_PATH}"
 
       - name: Create test foundry project
-        run: forge init --no-git --no-commit --template https://github.com/foundry-rs/forge-template foundry-test-project
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          forge init --no-git --no-commit --template https://github.com/foundry-rs/forge-template foundry-test-project
 
       - name: Build test foundry project
         working-directory: foundry-test-project
