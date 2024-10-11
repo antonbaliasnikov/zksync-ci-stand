@@ -73,7 +73,7 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          forge init --no-git --no-commit --template https://github.com/foundry-rs/forge-template foundry-test-project
+          forge init --no-git --no-commit foundry-test-project
 
       - name: Patch compilers
         working-directory: foundry-test-project
