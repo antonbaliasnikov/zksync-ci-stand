@@ -78,14 +78,14 @@ jobs:
       - name: Patch compilers
         working-directory: foundry-test-project
         run: |
-          echo "solc_version = \"${{ inputs.solidity-version || '0.8.27' }}\"" >> foundry.toml
-          echo "[profile.default.zksync]" >> foundry.toml
-          echo "zksolc = \"${{ inputs.zksolc-version || '1.5.4' }}\"" >> foundry.toml
+          if [ ! -z ${{ inputs.solidity-version }} ]; then
+            echo "solc_version = \"${{ inputs.solidity-version }}\"" >> foundry.toml
+          fi
+          if [ ! -z ${{ inputs.zksolc-version }} ]; then
+            echo "[profile.default.zksync]" >> foundry.toml
+            echo "zksolc = \"${{ inputs.zksolc-version }}\"" >> foundry.toml
+          fi
           cat foundry.toml
-
-      - name: Build test foundry project
-        working-directory: foundry-test-project
-        run: forge build --zksync
 
       - name: Run test foundry project
         working-directory: foundry-test-project
